@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"name": "yats-server",
+			"path": "../../nodejs y"
+		},
+		{
+			"name": "bceserver",
+			"path": "../../nodejs-oct-2023/bceserver"
+		},
+		{
+			"name": "nodejs y",
+			"path": "../../nodejs y"
+		},
+		{
+			"name": "nodejs-oct-2023",
+			"path": "../../nodejs-oct-2023"
+		},
+		{
+			"name": "BCE-Server",
+			"path": "../../nodejs y/BCE-Server"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "yats-server"
+	}
+}
+

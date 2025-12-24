@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <title>Index</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script>
+        $(document).ready(function () {
+            $("#btnSignup").click(function () {
+
+
+                let em = $("#txtEmail").val();
+                let pass = $("#txtPass").val();
+                let utype = $("#utype").val();
+
+
+                let config = {
+                    url: "/signup",
+                    type: "get",
+                    data: {
+                        emailKuch: em,
+                        pwdKuch: pass,
+                        utypeKuch: utype
+                    }
+                }
+                $.ajax(config).done(function (resp) {
+                    alert(resp);
+                }).fail(function (err) {
+                    alert(err);
+                });
+            });
+            // check email
+            $("#btnLogin").click(function () {
+                let em = $("#txtEmailL").val();
+                let pass = $("#txtPassL").val();
+                let config = {
+                    url: "/login",
+                    type: "get",
+                    data: {
+                        emailKuch: em,
+                        pwdKuch: pass
+                    }
+                }
+                $.ajax(config).done(function (resp) 
+                {
+                    if (resp === "Shelter")
+                    {
+                        localStorage.setItem("activeUser",em); //Entry added to local storage
+                        window.location.href = "dash-shelter.html";
+                    }
+                    else
+                        if (resp === "Owner")
+                        {
+                            localStorage.setItem("activeUser",em); //Entry added to local storage
+                            window.location.href = "dash-owner.html";
+                        }
+                        else
+                            alert(resp);
+
+
+                }).fail(function (err) {
+                    alert(err);
+                });
+            });
+        });
+
+    </script>
+
+    <head>
+
+    <body class="p-3 mb-2 bg-info-subtle text-emphasis-info">
+        <div class="container">
+                <div class="p-3 mb-2 bg-body text-body">
+                <nav class="navbar navbar-expand-lg  bg-success p-2 text-dark bg-opacity-50" style="margin-top: 5px;">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">
+                            <img src="pics/petLogo3.webp" alt="Logo" class="rounded-circle" width="70" height="60" class="d-inline-block align-text-top">
+                            Cozy Cove
+                          </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="modal"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <form method="post" enctype="multipart/form-data">
+                            <button type="button" class="btn btn-light" id="btnS" data-bs-target="#mymodel"
+                                data-bs-toggle="modal" style="margin-right:20px;">Signup</button>
+                            <button type="button" class="btn btn-light" id="btnL" data-bs-target="#mymodel1"
+                                data-bs-toggle="modal" style="margin-right:20px;">Login</button>
+                        </form>
+                    </div>
+            </div>
+            </nav>
+        
+        <!--crouselllllll-->
+        <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="pics/best-1.avif" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="pics/best2.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="pics/group-pet.jpeg" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <!--labellllllllllll-->
+        
+            <div class="col-md-12 text-center fs-3 bg-primary text-white">
+                Our Services
+            </div>
+        
+        <!--Cardsssssssssss-->
+        
+        <div class="row g-3">
+            <div class="card" style="width: 18rem; margin-right:30px; margin-left:25px;">
+                <img src="pics/pet7.avif" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">24x7 Services</h5>
+                    <p class="card-text">Some quick example text to build on theard title and make up the bulk of the
+                        card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;margin-right: 40px;">
+                <img src="pics/pet6.avif" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Pet Owners</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;margin-right: 40px;">
+                <img src="pics/petshelter1.avif" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Shelter Provider</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img src="pics/pet5.avif" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Our Job</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!--labellllll-->
+        
+            <div class="col-md-12 text-center fs-3 bg-primary text-white">
+                Meet The Developers
+            </div>
+        
+        <!--Cards-->
+        <div class="row g-4" style="margin-left: 40px;">
+        <div class="card mb-6" style="max-width: 600px; margin-right: 20px; ">
+            <div class="row g-0">
+                <h4 class="card-title">Developed By:</h4>
+              <div class="col-md-4">
+                <img src="pics/yatiksha.jpeg" class="img-fluid rounded-start" alt="..." style="border-radius: 50px ;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">Yatiksha Goyal</h3>
+                  <p class="card-text">Email: yatiksha29@gmail.com</p>
+                  <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-6" style="max-width: 600px;">
+            <div class="row g-0">
+                <h4 class="card-title">Under The Guidance:</h4>
+              <div class="col-md-4">
+                <img src="pics/RSir.jpeg" class="img-fluid rounded-start" alt="..." style="border-radius: 50px ;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">Rajesh K. Bansal</h3>
+                  <p class="card-text">Bangalore Computer Education,Bathinda.</p>
+                  <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--labellllll-->
+        
+            <div class="col-md-12 text-center fs-3 bg-primary text-white">
+                Contact Us
+            </div>
+            <div class="ratio ratio-16x9 mt-2">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13791.522932618522!2d74.9523281!3d30.2119513!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391732a4f07278a9%3A0x4a0d6293513f98ce!2sBanglore%20Computer%20Education!5e0!3m2!1sen!2sin!4v1702452854536!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            
+            </div>
+        <!--------Signup------->
+        <div class="modal" id="mymodel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Signup</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" enctype="multipart/form-data">
+
+                            <label class="form-label">Email address</label>
+                            <input type="text" class="form-control" name="txtEmail" id="txtEmail"
+                                placeholder="Enter you Email ID">
+
+
+                    </div>
+
+                    <div class="mb-3" style="margin-left:20px;">
+                        <label class="form-label">Password</label>
+                        <input type="password" placeholder="Enter your Password" class="form-control" id="txtPass">
+                    </div>
+
+
+                    <div class="md-form mb-3" style="margin-left:20px ;">
+
+                        <label data-error="wrong" data-success="right" for="Form-pass">User-Type</label>
+                        <select id="utype" class="form-control" required style="height: 50px;">
+                            <option selected value="">Select</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Shelter">Shelter</option>
+                        </select>
+
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btnSignup"
+                        style=" width: 100px; margin-left: 200px;">Signup</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <!---------login------->
+        <div class="modal" id="mymodel1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Login</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <label class="form-label">Email address</label>
+                            <input type="text" class="form-control" name="txtEmail" id="txtEmailL"
+                                placeholder="Enter you Email ID">
+                    </div>
+                    <div class="mb-3" style="margin-left:20px;">
+                        <label class="form-label">Password</label>
+                        <input type="password" placeholder="Enter your Password" class="form-control" id="txtPassL">
+                    </div>
+
+                    <button type="button" class="btn btn-primary" id="btnLogin"
+                        style=" width: 100px; margin-left: 200px;">Login</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <p>
+            <a href="/dash-admin"></a>
+        </p>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+
+        </div>
+            
+    </body>
+</head>

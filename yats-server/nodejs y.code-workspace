@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../nodejs y"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.port": 5501
+	}
+}
