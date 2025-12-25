@@ -48,9 +48,12 @@
                         emailKuch: em,
                         pwdKuch: pass
                     }
-                }
+                };
                 $.ajax(config).done(function (resp) 
                 {
+                    console.log("LOGIN RESP:", resp);     // ⬅ ye line add
+                    alert(JSON.stringify(resp));          // ⬅ ye line change
+
                     if (resp === "Shelter")
                     {
                         localStorage.setItem("activeUser",em); //Entry added to local storage
@@ -67,7 +70,9 @@
 
 
                 }).fail(function (err) {
-                    alert(err);
+                    console.log("LOGIN ERR:", err);  //  ye line add
+                    //alert(err);
+                    alert("Error in request");
                 });
             });
         });

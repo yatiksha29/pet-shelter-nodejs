@@ -1,8 +1,8 @@
 const express=require("express");
 const fileupload=require("express-fileupload");
-const mysql2=require("mysql2");
-const path = require("path");           // New Line
-require("dotenv").config();   // NEW LINE
+const mysql2=require("mysql2");  //package
+const path = require("path");   // New Line
+require("dotenv").config();    // NEW LINE
 
 const app=express();
 
@@ -11,8 +11,10 @@ console.log("ENV:", process.env.DB_HOST, process.env.DB_USER, process.env.DB_NAM
 app.listen(2007,function()
 {
     console.log("Server started at port:2007");
-})
+});
+
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "public", "uploads"))); //new line
 //app.use(express.static("public"));
 
 const configKuch={
@@ -22,27 +24,179 @@ const configKuch={
     database: process.env.DB_NAME,
     dateStrings:true,
     timezone: process.env.DB_TIMEZONE
-}
+};
 
-const mysql=mysql2.createConnection(configKuch);
+const mysql=mysql2.createConnection(configKuch); //connection object
 mysql.connect(function(err)
 {
     if(err==null)
     console.log("Connected Successfully");
     else
     console.log(err.sqlMessage);
-})
+});
 
-app.get("/",function(req,resp)
-{
-   const filePath=__dirname+ "/public/index.html";
-   resp.sendFile(filePath);
-})
+//app.get("/",function(req,resp)
+//{
+//   const filePath=__dirname+ "/public/index.html";
+//   resp.sendFile(filePath);
+//})
 app.get("/hello",function(req,resp)
 {
     resp.send("Hi Programmers");
 })
+
+
+///////////// OWNER PAGE DETAILS 
+// Home
+app.get("/", function (req, resp) {
+    resp.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Owner dashboard
+app.get("/dash-owner", function (req, resp) {
+    resp.sendFile(path.join(__dirname, "public", "dash-owner.html"));
+});
+
+// Owner Profile Information page
+app.get("/ownerPro", function (req, resp) {
+    resp.sendFile(path.join(__dirname, "public", "owner-profile.html"));
+});
+
+// Search Shelter page (owner side)
+app.get("/search-shelter", function (req, resp) {
+    resp.sendFile(path.join(__dirname, "public", "shelter-finder.html"));
+});
+
+
+// ---------- shelter-finder APIs ----------
+
+// Cities ke naam dropdown ke liye
+app.get("/Fetch-all-cities", function (req, resp) {
+    let query = "select distinct city from sprofile";
+    mysql.query(query, function (err, resTable) {
+        if (err) {
+            console.log(err);
+            resp.status(500).send(err.message);
+            return;
+        }
+        resp.send(resTable);
+    });
+});
+
+// Selected city ke shelters
+app.get("/fetch-shfinder-record", function (req, resp) {
+    let city = req.query.citykuch;
+    let query = "select * from sprofile where city=?";
+    mysql.query(query, [city], function (err, resTable) {
+        if (err) {
+            console.log(err);
+            resp.status(500).send(err.message);
+            return;
+        }
+        resp.send(resTable);
+    });
+});
+
+// shelter-profile ka Fetch button
+app.get("/fetch-record", function (req, resp) {
+    let em = req.query.emailKuch;
+    let query = "select * from sprofile where emailid=?";
+    mysql.query(query, [em], function (err, resTable) {
+        if (err) {
+            console.log(err);
+            resp.status(500).send(err.message);
+            return;
+        }
+        resp.send(resTable);
+    });
+});
+
+// ------ Owner Profile -----
+// OWNER PROFILE FETCH (Fetch Button)
+app.get("/fetch-json-record", function (req, resp) {
+    let em = req.query.emailKuch;          // JS se aa raha hai
+    let query = "select * from oprofile where emailid=?";
+
+    mysql.query(query, [em], function (err, resTable) {
+        if (err) {
+            console.log(err);
+            resp.status(500).send(err.message);
+            return;
+        }
+        resp.send(resTable);              // respJSONAry
+    });
+});
+
+app.use(fileupload());
+app.use(express.urlencoded({ extended: true }));
+
+// OWNER PROFILE SAVE
+app.post("/osave", function (req, resp) {
+    let d = req.body;
+
+    let picname = "nopic.jpeg";
+    if (req.files != null && req.files.ppic != null) {
+        picname = d.txtEmail + "-" + req.files.ppic.name;
+        const savePath = process.cwd() + "/public/uploads/" + picname;
+        req.files.ppic.mv(savePath);
+        console.log("Owner ppic uploaded");
+    }
+
+    let query = "insert into oprofile(emailid,name,contact,address,city,ppic) values(?,?,?,?,?,?)";
+
+    mysql.query(query, [
+        d.txtEmail,
+        d.txtName,
+        d.txtCon,
+        d.txtAdd,
+        d.txtCity,
+        picname,
+        d.txtP    // select multiple ka name="txtP"
+    ], function (err) {
+        if (err) {
+            resp.send(err.message);
+        } else {
+            resp.send("Saved");
+        }
+    });
+});
+
+// OWNER PROFILE UPDATE
+app.post("/oupdate", function (req, resp) {
+    let d = req.body;
+
+    let picname = d.hdnPic || "nopic.jpeg";   // hidden old pic
+    if (req.files != null && req.files.ppic != null) {
+        picname = d.txtEmail + "-" + req.files.ppic.name;
+        const savePath = process.cwd() + "/public/uploads/" + picname;
+        req.files.ppic.mv(savePath);
+        console.log("Owner ppic uploaded (update)");
+    }
+
+    let query = "update oprofile set name=?,contact=?,address=?,city=?,ppic=? where emailid=?";
+
+    mysql.query(query, [
+        d.txtName,
+        d.txtCon,
+        d.txtAdd,
+        d.txtCity,
+        picname,
+        d.txtP,
+        d.txtEmail
+    ], function (err, result) {
+        if (err) {
+            resp.send(err.message);
+        } else if (result.affectedRows == 1) {
+            resp.send("Updated");
+        } else {
+            resp.send("Invalid ID");
+        }
+    });
+});
+
+
  
+//------- Signup process ----------------
 app.get("/signup-process",function(req,resp)
 {
     console.log(req.query);
@@ -74,8 +228,8 @@ app.get("/signup-secure",function(req,resp)
     
 })
 
-app.use(fileupload());
-app.use(express.urlencoded({extended:true}));
+//app.use(fileupload());
+//app.use(express.urlencoded({extended:true}));
 app.post("/signup-process-secure",function(req,resp)
 {
     //resp.send("welcome:"+req.body.txtEmail);
@@ -100,7 +254,7 @@ app.post("/signup-process-secure",function(req,resp)
     resp.end(); 
 });
 
-app.post("signup-process-secure",function PreviewImage()
+/*app.post("signup-process-secure",function PreviewImage()
 {
     var oFReader= new FileReader();
     oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
@@ -109,7 +263,7 @@ app.post("signup-process-secure",function PreviewImage()
     {
      document.getElementById("uploadPreview").src=oFREvent.target.result;
     }
-});
+}); */
 
 //------------------DATABASE Connectivity Code
 app.get("/profile-front",function(req,resp)
@@ -223,4 +377,41 @@ app.get("/fetch-json-record",function(req,resp)
         resp.send(resTable);
     });
 })
+
+// ------------- LOGIN ROUTE -------------
+app.get("/login", function (req, resp) {
+
+    let em  = req.query.emailKuch;
+    let pwd = req.query.pwdKuch;
+
+    console.log("LOGIN REQ:", em, pwd);
+
+    // users table: emailid, pwd, Utype, status
+    let query = "select * from users where emailid=? and pwd=? and status=1";
+
+    mysql.query(query, [em, pwd], function (err, resTable) {
+
+        console.log("LOGIN RESULT err:", err);
+        console.log("LOGIN RESULT rows:", resTable);
+
+        if (err) {
+            resp.send(err.message);
+            return;
+        }
+
+        if (resTable.length == 1) {
+            let utype = resTable[0].Utype;   // column name exactly Utype hai
+
+            if (utype === "Owner")
+                resp.send("Owner");
+            else if (utype === "Shelter")
+                resp.send("Shelter");
+            else
+                resp.send("Unknown");
+        } else {
+            resp.send("Invalid Email or Password");
+        }
+    });
+});
+
 
